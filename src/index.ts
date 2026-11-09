@@ -1,8 +1,10 @@
-export {OAuth2ConfigParameters} from "./OAuth2Client/OAuth2ConfigParameters";
-export {OAuth2Config} from "./OAuth2Config";
-export {OAuth2Client} from "./OAuth2Client";
-export {Storage} from "./Storage/Storage";
-export {NullStorage} from "./Storage/NullStorage";
-export {MemoryStorage} from "./Storage/MemoryStorage";
-export {FileStorage} from "./Storage/FileStorage";
-export {UrlHelper} from "./Helpers/UrlHelper";
+/**
+ * Script-tag build of @9in/sdk. Everything is exposed on `window.Nine`:
+ *
+ *   <script src="https://cdn.jsdelivr.net/npm/@9in/browser@2/dist/9in.min.js"></script>
+ *   const auth = new Nine.NineAuth({issuer, clientId, redirectUri});
+ */
+export * from '@9in/sdk';
+
+declare const __VERSION__: string;
+export const version: string = __VERSION__;

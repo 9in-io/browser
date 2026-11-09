@@ -1,39 +1,15 @@
 {
-    "exclude": [
-        "tests",
-        "jest.*",
-        "html",
-        "build",
-        "dist",
-        "coverage",
-        "src/__test__",
-        "webpack.config.js"
-    ],
+    "include": ["src"],
+    "exclude": ["src/__test__", "dist", "html"],
     "compilerOptions": {
-        /* Visit https://aka.ms/tsconfig to read more about this file */
-
-        /* Language and Environment */
-        "target": "es5",
-        "lib": [
-            "es6",
-            "dom"
-        ],
-        /* Modules */
-        "module": "commonjs",
-        "rootDir": "src/",
-        "resolveJsonModule": true,
-        /* JavaScript Support */
-        "allowJs": true,
-        /* Emit */
-        "declaration": true,
-        "outDir": "build",
-        /* Interop Constraints */
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
-        /* Type Checking */
+        "target": "es2020",
+        "lib": ["es2023", "dom"],
+        "module": "esnext",
+        "moduleResolution": "bundler",
         "strict": true,
-        "noImplicitAny": true,
-        /* Completeness */
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "noEmit": false
     }
 }

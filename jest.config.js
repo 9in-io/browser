@@ -1,13 +1,6 @@
-/*
- * For a detailed explanation regarding each configuration property, visit:
- * https://jestjs.io/docs/configuration
- */
-
 module.exports = {
     clearMocks: true,
-    collectCoverage: true,
-    coverageDirectory: "coverage",
-    coverageProvider: "v8",
-    preset: 'ts-jest',
-    modulePathIgnorePatterns: ["build"],
+    testEnvironment: 'node',
+    roots: ['<rootDir>/src'],
+    transform: {'^.+\\.ts$': ['ts-jest', {tsconfig: {module: 'commonjs', target: 'es2022', esModuleInterop: true, isolatedModules: true}}]},
 };

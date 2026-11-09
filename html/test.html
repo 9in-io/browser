@@ -2,109 +2,66 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SSOfy Response Viewer</title>
+    <title>9in browser SDK test</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js"></script>
-    <script src="/dist/ssofy.min.js"></script>
+    <script src="../dist/9in.min.js"></script>
 </head>
 <body>
 
-<div class="container">
-    <h1>
-        SSOfy - Browser Test
-    </h1>
+<!--
+    Serve the repository root (e.g. `npx serve .`), open /html/test.html, and register
+    <origin>/html/test.html as a redirect URL of a single-page application in 9in.
+-->
 
-    <button onclick="initImplicitFlow()">Init Implicit Flow</button>
-    <button onclick="initAuthCodeFlow()">Init Auth Code Flow</button>
+<div class="container">
+    <h1>9in - Browser Test</h1>
+
+    <label for="issuer">Issuer</label>
+    <input id="issuer" placeholder="https://acme.9in.io">
+    <label for="clientId">Client ID</label>
+    <input id="clientId" placeholder="app_…">
+
+    <button onclick="auth().login()">Sign in</button>
+    <button onclick="auth().signup()">Sign up</button>
+    <button onclick="auth().logout({returnTo: location.href.split('?')[0]})">Sign out</button>
 </div>
 
 <div class="container">
     <label>Status:</label>
     <div id="statusLabel">Loading...</div>
 
-    <label for="jsonTextbox">Token (JSON):</label>
+    <label for="jsonTextbox">User (ID token claims):</label>
     <textarea id="jsonTextbox" readonly></textarea>
 </div>
 
 <script>
-    const client = new SSOfy.OAuth2Client({
-        url: 'http://sandbox.us.ssofy.local',
-        clientId: 'sandbox',
-        clientSecret: 'sandbox',
-        redirectUri: SSOfy.UrlHelper.getUrl(window.location.href) + '/#callback',
-        pkceVerification: true,
-        scopes: ['*'],
-        locale: 'en',
-        stateStore: new SSOfy.LocalStorage(),
-        stateTtl: 30 * 24 * 60 * 60,
-    });
+    for (const id of ['issuer', 'clientId']) {
+        const input = document.getElementById(id);
+        input.value = localStorage.getItem('9in-test:' + id) || '';
+        input.addEventListener('change', () => localStorage.setItem('9in-test:' + id, input.value));
+    }
 
-    async function initAuthCodeFlow() {
-        const stateData = await client.initAuthCodeFlow();
-
-        updateUI('Starting Authorization Code Flow...', null);
-
-        // some delay for ui responsiveness
-        await new Promise(function (resolve) {
-            setTimeout(resolve, 1000);
+    function auth() {
+        return new Nine.NineAuth({
+            issuer: document.getElementById('issuer').value,
+            clientId: document.getElementById('clientId').value,
+            redirectUri: location.origin + location.pathname,
         });
-
-        window.location.href = stateData.authorizationUri;
     }
 
-    async function initImplicitFlow() {
-        const stateData = await client.initImplicitFlow();
-
-        updateUI('Starting Implicit Flow...', null);
-
-        // some delay for ui responsiveness
-        await new Promise(function (resolve) {
-            setTimeout(resolve, 1000);
-        });
-
-        window.location.href = stateData.authorizationUri;
-    }
-
-    async function handleCallback() {
-        const parameters = SSOfy.UrlHelper.getParameters(window.location.href);
-
-        const stateData = await client.handleCallback(parameters);
-
-        localStorage.setItem('state', stateData.state);
-
-        updateUI('Token Received', stateData.token);
-
-        if (stateData.nextUri) {
-            window.location.href = stateData.nextUri;
-        }
-    }
-
-    async function main() {
+    async function show() {
+        const status = document.getElementById('statusLabel');
         try {
-            const token = await client.getAccessToken(localStorage.getItem('state'));
-            if (token) {
-                updateUI('Valid Token', token);
-                return;
-            }
+            if (new URLSearchParams(location.search).has('code')) await auth().handleRedirect();
+            const user = await auth().getUser();
+            status.textContent = user ? 'Signed in' : 'Signed out';
+            document.getElementById('jsonTextbox').value = JSON.stringify(user, null, 2);
         } catch (error) {
-            updateUI('Error: ' + error.message, null);
-        }
-
-        try {
-            if (window.location.hash.indexOf('#callback') >= 0) {
-                // this is a callback
-                updateUI('Exchanging Token for Access Token...', null);
-
-                await handleCallback();
-            }
-
-        } catch (error) {
-            updateUI('Error: ' + error.message, null);
+            status.textContent = String(error);
         }
     }
 
-    main();
+    if (document.getElementById('issuer').value) show(); else document.getElementById('statusLabel').textContent = 'Enter an issuer and client ID.';
 </script>
-
 </body>
 </html>

@@ -1,171 +1,68 @@
-SSOfy Javascript SDK
-=============
-#### Official [SSOfy](https://www.ssofy.com) Javascript SDK.
+9in Browser SDK
+===============
 
-**Built for use in browsers and Node.js applications.**
+<img src="docs/img/logo.png" width="160" alt="9in"/>
 
-Read the full [documentation](https://www.ssofy.com/docs/SDK/Javascript/Installation/) at SSOfy Knowledge Base.
+The [9in](https://9in.io) sign-in SDK as one `<script>` tag.
 
-<img src="docs/img/logo.png"/>
+This package is a ready-to-use browser build of [`@9in/sdk`](https://www.npmjs.com/package/@9in/sdk),
+the official 9in JavaScript SDK. It exposes `NineAuth` on `window.Nine`: authorization code
+flow with PKCE, refresh token rotation and logout against your tenant's standard OpenID
+Connect endpoints. ~8 KB minified, no dependencies.
 
-## Installation
+**Using a bundler (Vite, webpack, Next.js…) or Node?** Install `@9in/sdk` (browser and
+server) or `@9in/node` instead. This package only adds the prebuilt files.
 
-### CDN
+Upgrading from `@ssofy/javascript-sdk` 1.x? Read [MIGRATION.md](MIGRATION.md).
+
+## CDN
+
 ```html
-<script src="https://cdn.jsdelivr.net/gh/ssofy/javascript-sdk/dist/ssofy.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@9in/browser@2/dist/9in.min.js"></script>
 
-<!-- UMD Version -->
-<script src="https://cdn.jsdelivr.net/gh/ssofy/javascript-sdk/dist/ssofy.umd.min.js"></script>
-```
-
-### Installing via NPM
-
-```bash
-npm i @ssofy/javascript-sdk -S
-```
-
-### Installing via YARN
-
-```bash
-yarn add @ssofy/javascript-sdk
+<!-- UMD (AMD / CommonJS / global) -->
+<script src="https://cdn.jsdelivr.net/npm/@9in/browser@2/dist/9in.umd.min.js"></script>
 ```
 
 ## Usage
 
-### Client Configuration
+```html
+<script>
+    const auth = new Nine.NineAuth({
+        issuer: 'https://acme.9in.io',            // or your custom login domain
+        clientId: 'app_…',                        // a single-page application in the console
+        redirectUri: location.origin + '/callback',
+        // audience: 'https://api.acme.com',      // access tokens for your API
+    });
 
-#### Browser:
-```javascript
-const client = new SSOfy.OAuth2Client({
-    url: 'https://YOUR-SSO-DOMAIN',
-    clientId: 'sandbox',
-    redirectUri: 'https://CURRENT-DOMAIN/callback'
-    scopes: ['*'],
-    locale: 'en',
-    // state: '', //optional
-    stateStore: new SSOfy.LocalStorage(),
-    stateTtl: 30 * 24 * 60 * 60,
-});
+    // Sign in / sign up
+    document.querySelector('#login').onclick = () => auth.login({returnTo: location.pathname});
+    document.querySelector('#signup').onclick = () => auth.signup();
+
+    // On /callback
+    if (location.pathname === '/callback') {
+        auth.handleRedirect().then(({user, returnTo}) => location.replace(returnTo ?? '/'));
+    }
+
+    // Anywhere
+    const user = await auth.getUser();                       // ID token claims or null
+    const res = await auth.fetch('https://api.acme.com/orders');   // Bearer token, refreshed automatically
+    await auth.logout({returnTo: location.origin});
+</script>
 ```
 
-#### ES6 / Typescript:
-```typescript
-import { OAuth2Config, OAuth2Client, Storage, FileStorage } from "@ssofy/javascript-sdk";
-import fs from "fs";
+The full API is documented in the [`@9in/sdk` README](https://www.npmjs.com/package/@9in/sdk).
+Errors are `Nine.NineError` with a `code` (`login_required`, `invalid_state`, …).
 
-const storagePath = fs.mkdtempSync('/tmp/');
-const stateStore = new FileStorage(storagePath);
+## Development
 
-const config = new OAuth2Config({
-    url: 'https://YOUR-SSO-DOMAIN',
-    clientId: 'sandbox',
-    clientSecret: 'sandbox',
-    redirectUri: 'https://CURRENT-DOMAIN/callback'
-    pkceVerification: true,
-    scopes: ['*'],
-    locale: 'en',
-    // state: '', //optional
-    stateStore: <Storage>stateStore,
-    stateTtl: 30 * 24 * 60 * 60,
-});
-
-const client = new OAuth2Client(config);
+```bash
+npm install     # links @9in/sdk from ../../v2/packages/sdk (see package.json)
+npm test        # builds dist/ and runs the bundles against a fake tenant
 ```
 
-### Generate Login Url
-
-#### Auth Code Flow
-```javascript
-const customAuthorizationUrl = null; // optional
-const nextUri = null; // optional
-
-const stateData = await client.initAuthCodeFlow(customAuthorizationUrl, nextUri);
-
-// redirect to the login page
-window.location.href = stateData.authorizationUri;
-```
-
-#### Implicit Flow
-```javascript
-const customAuthorizationUrl = null; // optional
-const nextUri = null; // optional
-
-const stateData = await client.initImplicitFlow(customAuthorizationUrl, nextUri);
-
-// redirect to the login page
-window.location.href = stateData.authorizationUri;
-```
-
-### Handling Callbacks
-```javascript
-// create json payload from url parameters
-const parameters = SSOfy.UrlHelper.getParameters(window.location.href);
-
-// handle the callback
-const stateData = await client.handleCallback(parameters);
-
-// store the last login state identifier somewhere for future use
-localStorage.setItem('state', stateData.state);
-
-if (stateData.nextUri) {
-    // Hint: /optional-uri-to-redirect-next
-    window.location.href = stateData.nextUri;
-}
-```
-
-### Get Access Token
-```javascript
-const state = localStorage.getItem('state');
-
-const accessToken = await client.getAccessToken(state);
-```
-
-### Renew Access Token
-In most cases, it's not necessary to call this method as `getAccessToken()` refreshes the token automatically upon expiration.
-However, should you require an earlier token refresh, this method can be used in such instances.
-
-```javascript
-const state = localStorage.getItem('state');
-
-const accessToken = await client.renewAccessToken(state);
-```
-
-### Logout Locally
-
-```javascript
-await client.destroy(state);
-```
-
-### Logout Globally (SLO)
-
-```javascript
-await client.destroy(state);
-
-// logout from this device
-window.location.href = config.logoutUrl('URI-TO-REDIRECT-AFTER-LOGOUT')
-
-// logout from all devices (SLO)
-window.location.href = config.logoutEverywhereUrl('URI-TO-REDIRECT-AFTER-LOGOUT')
-```
-
-### Get User Info
-
-```javascript
-const state = localStorage.getItem('state');
-
-const user = await client.getUserInfo(state);
-```
-
-## Support
-
-Feel free to reach support with any questions regarding the integration or reporting issues.
-Our technical experts are available around the clock to conduct investigations and provide
-the highest quality product and service support as quickly as possible.
-
-## Author
-
-**SSOfy** and derivatives are by [Cubelet Ltd](https://cubelet.co.uk).
+`html/test.html` is a manual test page for a real tenant.
 
 ## License
 
-The MIT License (MIT). Please see [License](LICENSE) File for more information.
+The MIT License (MIT). See [LICENSE](LICENSE). 9in and SSOfy are by [Cubelet Ltd](https://cubelet.co.uk).

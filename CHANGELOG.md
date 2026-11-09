@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2.0.0 - unreleased
+
+The JavaScript SDK is now **`@9in/sdk`**. This repository continues as **`@9in/browser`**, its `<script>`-tag build. See [MIGRATION.md](MIGRATION.md).
+
+* `dist/9in.min.js` (`window.Nine`) and `dist/9in.umd.min.js`, bundled from `@9in/sdk` (~8 KB): `NineAuth` with PKCE, refresh rotation, logout, `NineError`.
+* `NineAuth` refuses plain-http issuers other than localhost (`allowInsecureIssuer` to override).
+* Removed the SSOfy client (`OAuth2Client`, storages, implicit flow, `UrlHelper`); use `@9in/sdk` / `@9in/node` from npm.
+* Jest tests run the built bundles against a fake tenant.
+
 ## 1.2.0 * 2024-01-27
 
 * Fixed issue with parsing query parameters in fragment.
