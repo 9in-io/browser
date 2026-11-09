@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2.0.2 - 2026-11-09
+
+Bundles `@9in-io/sdk` 0.1.1:
+
+* A sign-in whose ID token fails its checks (wrong audience or nonce, malformed) no longer leaves the
+  tokens in storage: `handleRedirect()` throws `invalid_id_token` and `isAuthenticated()` stays false.
+
 ## 2.0.1 - 2026-11-09
 
 First release on npm, as `@9in-io/browser`: the npm organisation `9in` belongs to someone else, so the 9in

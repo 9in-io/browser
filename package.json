@@ -1,6 +1,6 @@
 {
   "name": "@9in-io/browser",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Script-tag build of @9in-io/sdk for 9in sign-in in the browser (window.Nine): authorization code flow with PKCE, refresh token rotation, logout. Bundlers should import @9in-io/sdk instead.",
   "keywords": [
     "9in",
