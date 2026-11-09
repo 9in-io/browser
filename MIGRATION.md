@@ -1,8 +1,8 @@
 # Migrating from `@ssofy/javascript-sdk` 1.x to 9in
 
 SSOfy is now [9in](https://9in.io), and its two JavaScript SDKs are now one:
-[`@9in/sdk`](https://www.npmjs.com/package/@9in/sdk). This repository
-continues as `@9in/browser` 2.0, the `<script>`-tag build of `@9in/sdk`.
+[`@9in-io/sdk`](https://www.npmjs.com/package/@9in-io/sdk). This repository
+continues as `@9in-io/browser` 2.0, the `<script>`-tag build of `@9in-io/sdk`.
 
 **Upgrading is required to use 9in.** `@ssofy/javascript-sdk` 1.x talks to the SSOfy
 service (`/authorize`, `/token`, `/userinfo` on SSOfy hosts, `scopes: ['*']`). That service
@@ -13,13 +13,13 @@ not work with 9in. The old version stays on npm but is no longer maintained.
 
 | You used | Use |
 |---|---|
-| `npm i @ssofy/javascript-sdk` in a bundled browser app | `npm i @9in/sdk` and `import {NineAuth} from '@9in/sdk'` |
-| `@ssofy/javascript-sdk` in Node (server-side login with `FileStorage`) | `npm i @9in/node` and `ServerAuth` |
-| `<script src=".../ssofy.min.js">` (`window.SSOfy`) | `<script src="https://cdn.jsdelivr.net/npm/@9in/browser@2/dist/9in.min.js">` (`window.Nine`) |
+| `npm i @ssofy/javascript-sdk` in a bundled browser app | `npm i @9in-io/sdk` and `import {NineAuth} from '@9in-io/sdk'` |
+| `@ssofy/javascript-sdk` in Node (server-side login with `FileStorage`) | `npm i @9in-io/node` and `ServerAuth` |
+| `<script src=".../ssofy.min.js">` (`window.SSOfy`) | `<script src="https://cdn.jsdelivr.net/npm/@9in-io/browser@2/dist/9in.min.js">` (`window.Nine`) |
 
 ## API mapping
 
-| 1.x | 2.x / `@9in/sdk` |
+| 1.x | 2.x / `@9in-io/sdk` |
 |---|---|
 | `new SSOfy.OAuth2Client({url, clientId, clientSecret, redirectUri, scopes, stateStore, …})` | `new Nine.NineAuth({issuer, clientId, redirectUri, scope?, audience?, storage?})`; no client secret in browsers |
 | `initAuthCodeFlow(url, nextUri)` | `login({returnTo})` (PKCE S256 always) |

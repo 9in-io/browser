@@ -1,12 +1,17 @@
 # CHANGELOG
 
-## 2.0.0 - unreleased
+## 2.0.1 - 2026-11-09
 
-The JavaScript SDK is now **`@9in/sdk`**. This repository continues as **`@9in/browser`**, its `<script>`-tag build. See [MIGRATION.md](MIGRATION.md).
+First release on npm, as `@9in-io/browser`: the npm organisation `9in` belongs to someone else, so the 9in
+packages are published under `@9in-io` (the name of 9in's GitHub account). Same code as 2.0.0.
 
-* `dist/9in.min.js` (`window.Nine`) and `dist/9in.umd.min.js`, bundled from `@9in/sdk` (~8 KB): `NineAuth` with PKCE, refresh rotation, logout, `NineError`.
+## 2.0.0 - 2026-11-09 (not published to npm)
+
+The JavaScript SDK is now **`@9in-io/sdk`**. This repository continues as **`@9in-io/browser`**, its `<script>`-tag build. See [MIGRATION.md](MIGRATION.md).
+
+* `dist/9in.min.js` (`window.Nine`) and `dist/9in.umd.min.js`, bundled from `@9in-io/sdk` (~8 KB): `NineAuth` with PKCE, refresh rotation, logout, `NineError`.
 * `NineAuth` refuses plain-http issuers other than localhost (`allowInsecureIssuer` to override).
-* Removed the SSOfy client (`OAuth2Client`, storages, implicit flow, `UrlHelper`); use `@9in/sdk` / `@9in/node` from npm.
+* Removed the SSOfy client (`OAuth2Client`, storages, implicit flow, `UrlHelper`); use `@9in-io/sdk` / `@9in-io/node` from npm.
 * Jest tests run the built bundles against a fake tenant.
 
 ## 1.2.0 * 2024-01-27

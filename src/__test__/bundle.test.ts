@@ -62,7 +62,7 @@ function fakeTenant() {
 }
 
 describe('window build (dist/9in.min.js)', () => {
-    it('exposes the @9in/sdk browser API on window.Nine', () => {
+    it('exposes the @9in-io/sdk browser API on window.Nine', () => {
         const Nine = loadWindowBuild();
         expect(typeof Nine.NineAuth).toBe('function');
         expect(typeof Nine.NineError).toBe('function');

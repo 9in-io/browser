@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const pkg = require('./package.json');
 
-const banner = `9in browser SDK v${pkg.version} (@9in/sdk)
+const banner = `9in browser SDK v${pkg.version} (@9in-io/sdk)
 Copyright (c) ${new Date().getFullYear()} Cubelet Ltd. MIT License.
 https://github.com/9in-io/browser`;
 
@@ -16,7 +16,7 @@ const config = {
     },
     resolve: {
         extensions: ['.ts', '.js'],
-        // @9in/sdk is bundled from its TypeScript sources (the "@9in/source" export
+        // @9in-io/sdk is bundled from its TypeScript sources (the "@9in/source" export
         // condition), which use ESM-style `./x.js` imports.
         conditionNames: ['@9in/source', '...'],
         extensionAlias: {'.js': ['.ts', '.js']},
