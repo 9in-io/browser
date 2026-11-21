@@ -31,7 +31,7 @@ Upgrading from `@ssofy/javascript-sdk` 1.x? Read [MIGRATION.md](MIGRATION.md).
     const auth = new Nine.NineAuth({
         issuer: 'https://acme.9in.io',            // or your custom login domain
         clientId: 'app_…',                        // a single-page application in the console
-        redirectUri: location.origin + '/callback',
+        redirectUri: location.origin + '/nine/callback',
         // audience: 'https://api.acme.com',      // access tokens for your API
     });
 
@@ -39,8 +39,8 @@ Upgrading from `@ssofy/javascript-sdk` 1.x? Read [MIGRATION.md](MIGRATION.md).
     document.querySelector('#login').onclick = () => auth.login({returnTo: location.pathname});
     document.querySelector('#signup').onclick = () => auth.signup();
 
-    // On /callback
-    if (location.pathname === '/callback') {
+    // On /nine/callback
+    if (location.pathname === '/nine/callback') {
         auth.handleRedirect().then(({user, returnTo}) => location.replace(returnTo ?? '/'));
     }
 
