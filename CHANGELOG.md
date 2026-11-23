@@ -14,7 +14,7 @@ packages are published under `@9in-io` (the name of 9in's GitHub account). Same 
 
 ## 2.0.0 - 2026-11-09 (not published to npm)
 
-The JavaScript SDK is now **`@9in-io/sdk`**. This repository continues as **`@9in-io/browser`**, its `<script>`-tag build. See [MIGRATION.md](MIGRATION.md).
+The JavaScript SDK is now **`@9in-io/sdk`**. This repository continues as **`@9in-io/browser`**, its `<script>`-tag build.
 
 * `dist/9in.min.js` (`window.Nine`) and `dist/9in.umd.min.js`, bundled from `@9in-io/sdk` (~8 KB): `NineAuth` with PKCE, refresh rotation, logout, `NineError`.
 * `NineAuth` refuses plain-http issuers other than localhost (`allowInsecureIssuer` to override).

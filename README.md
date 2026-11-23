@@ -13,8 +13,6 @@ Connect endpoints. ~8 KB minified, no dependencies.
 **Using a bundler (Vite, webpack, Next.js…) or Node?** Install `@9in-io/sdk` (browser and
 server) or `@9in-io/node` instead. This package only adds the prebuilt files.
 
-Upgrading from `@ssofy/javascript-sdk` 1.x? Read [MIGRATION.md](MIGRATION.md).
-
 ## CDN
 
 ```html
@@ -65,4 +63,4 @@ npm test        # builds dist/ and runs the bundles against a fake tenant
 
 ## License
 
-The MIT License (MIT). See [LICENSE](LICENSE). 9in and SSOfy are by [Cubelet Ltd](https://cubelet.co.uk).
+The MIT License (MIT). See [LICENSE](LICENSE). 9in is by [Cubelet Ltd](https://cubelet.co.uk).

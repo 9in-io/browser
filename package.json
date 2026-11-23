@@ -25,7 +25,6 @@
   "files": [
     "dist",
     "README.md",
-    "MIGRATION.md",
     "CHANGELOG.md"
   ],
   "scripts": {
